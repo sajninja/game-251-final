@@ -568,6 +568,7 @@
 
                 // animations
                 if (player.body.touching.down) {
+                    maxFallSpeed = 800;
                     if (1.5 - (maxJumps - 1) / 5 > camZoom) {
                         camZoom += 0.0005;
                     } else {
