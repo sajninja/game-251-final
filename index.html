@@ -54,7 +54,6 @@
         var cloudSpawnTimer;
         var cam;
         var airMovementSpeed;
-        var MaxFallSpeed;
         var level = 1;
         var keyCollected;
         var levelSpawnTimer;
@@ -73,6 +72,9 @@
         var camZoom;
         var prevX = 0;
         var prevY = 0;
+        var ending = false;
+        var endingTimer = -1;
+        var jumpPower = 700;
 
         function preload() {
             this.load.image('sky', 'assets/2sky.png');
@@ -95,12 +97,14 @@
             this.load.image('building_1', 'assets/building_1.png');
             this.load.image('building_2', 'assets/building_2.png');
             this.load.image('building_3', 'assets/building_3.png');
+            this.load.image('building_4', 'assets/building_4.png');
             this.load.image('building_behind', 'assets/1building_behind.png');
             this.load.image('ledge_1', 'assets/ledge_1.png');
             this.load.image('ledge_2', 'assets/ledge_2.png');
             this.load.image('ledge_3', 'assets/ledge_3.png');
             this.load.image('sign_1', 'assets/1sign.png');
             this.load.image('sign_2', 'assets/sign_2.png');
+            this.load.image('end_background', 'assets/1end_background.png');
             // this.load.audio('player_flap_1', 'assets/sounds/player_flap_3.wav');
             // this.load.audio('player_flap_2', 'assets/sounds/player_flap_4.wav');
             maxJumps = 1;
@@ -225,7 +229,7 @@
             keys = this.physics.add.group();
             player = this.physics.add.sprite(100, 450, 'player');
             player.setDrag(1000, 0);
-            player.setMaxVelocity(400, 10000);
+            player.setMaxVelocity(500, 10000);
             this.physics.add.collider(player, grounds);
             this.physics.add.collider(player, walls);
             this.physics.add.collider(wings, grounds);
@@ -250,6 +254,8 @@
             // const playerFlap = this.sound.add('player_flap_1');
             // this.sound.unlock();
             // playerFlap.play();
+
+            // triggerEnding();
 
         }
 
@@ -316,6 +322,13 @@
                     prevX += x;
                     prevY += y;
                     break;
+                case 8:
+                    x = 0;
+                    y = 0;
+                    createLevel8(prevX + x, prevY + y);
+                    prevX += x;
+                    prevY += y;
+                    break;
             }
             i++;
 
@@ -335,7 +348,6 @@
 
             text = gameScene.add.text(xOffset - 300, yOffset - 200, 'Hold the left or right arrow to run', { fontFamily: 'Georgia, serif', fontSize: 18});
             text = gameScene.add.text(xOffset + 100, yOffset - 200, 'Collect the key to unlock the next level', { fontFamily: 'Georgia, serif', fontSize: 18});
-
         }
 
         function createLevel2(xOffset, yOffset) {
@@ -466,22 +478,85 @@
 
             decorations.create(xOffset + nextClusterOffset, yOffset - 450 - 300, 'building_behind');
             grounds.create(xOffset + nextClusterOffset + 170, yOffset - 1487, 'ledge_2');
-            // ledge = grounds.create(xOffset + 130 + nextClusterOffset, yOffset - 320 - 300, 'ledge_1');
             grounds.create(xOffset + nextClusterOffset, yOffset - 300, 'building_3');
             grounds.create(xOffset + nextClusterOffset, yOffset - 875 - 300, 'building_3');
             grounds.create(xOffset + nextClusterOffset, yOffset + 310 - 300, 'ground_small');
-            wings.create(xOffset + nextClusterOffset + 250, yOffset - 1570, 'wing');
-
-            text = gameScene.add.text(xOffset + nextClusterOffset + 175, yOffset - 1620, 'The end for now', { fontFamily: 'Georgia, serif', fontSize: 18});
+            wings.create(xOffset + nextClusterOffset + 200, yOffset - 1570, 'wing');
+            keys.create(xOffset + nextClusterOffset + 250, yOffset - 1570, 'key');
 
             wingPhysics();
         }
 
-        function update() {
-            sharedUpdate();
+        function createLevel8(xOffset, yOffset) {
+            
+            sign = decorations.create(xOffset + 1850, yOffset - 1560 + 10, 'sign_2');
+            sign.angle = 9;
+            sign = decorations.create(xOffset + 1700, yOffset - 1550 + 10, 'sign_2');
+            sign.angle = -24;
+            sign = decorations.create(xOffset + 1750, yOffset - 1590 + 10, 'sign_2');
+            sign.angle = -12;
+            sign = decorations.create(xOffset + 1800, yOffset - 1595 + 10, 'sign_2');
+            sign.angle = 10;
+            sign = decorations.create(xOffset + 1800, yOffset - 1560 + 10, 'sign_2');
+            sign.angle = -10;
+            sign = decorations.create(xOffset + 1760, yOffset - 1560 + 10, 'sign_2');
+            sign.angle = 7;
+            sign = decorations.create(xOffset + 1725, yOffset - 1560 + 10, 'sign_2');
+            sign.angle = -6;
+
+            var nextClusterOffset = -1250 - 200;
+            grounds.create(0 + nextClusterOffset + 160, -100 - 150, 'ledge_2');
+            grounds.create(0 + nextClusterOffset - 130, -100 - 700, 'ledge_3');
+            grounds.create(0 + nextClusterOffset - 130, -100 - 1100, 'ledge_3');
+            grounds.create(0 + nextClusterOffset + 160, -100 - 1900, 'ledge_2');
+            grounds.create(0 + nextClusterOffset + 100, -100 - 2400, 'ledge_1');
+            decorations.create(0 + nextClusterOffset, -100 - 375 - 450, 'building_behind');
+            grounds.create(0 + nextClusterOffset, -100 - 375, 'building_3');
+            grounds.create(0 + nextClusterOffset, -100 - 375 - 200 - 700, 'building_3');
+            decorations.create(0 + nextClusterOffset, -100 - 375 - 900 * 1 - 450, 'building_behind');
+            grounds.create(0 + nextClusterOffset, -100 - 375 - 900 * 2, 'building_3');
+
+            nextClusterOffset = -600 - 200;
+
+            grounds.create(0 + nextClusterOffset - 220, -100 - 1200 + 200 - 900 * 2, 'ledge_3');
+            grounds.create(0 + nextClusterOffset - 180, -100 - 1200 - 50 - 900 * 2, 'ledge_3');
+            grounds.create(0 + nextClusterOffset, -100 - 1200 - 900 * 2, 'building_1');
+            grounds.create(0 + nextClusterOffset - 800, -100 - 1800 - 900 * 2, 'ground_small');
+
+            nextClusterOffset = -2000 - 200;
+
+            grounds.create(0 + nextClusterOffset + 120, -100 - 2500 + 200 - 900 * 2, 'ledge_1');
+            grounds.create(0 + nextClusterOffset - 120, -100 - 2500 - 900 * 2, 'ledge_3');
+            grounds.create(0 + nextClusterOffset - 80, -100 - 2500 - 400 - 900 * 2, 'ledge_3');
+            grounds.create(0 + nextClusterOffset - 60, -100 - 2500 - 800 - 900 * 2, 'ledge_3');
+            grounds.create(0 + nextClusterOffset, -100 - 2500 - 100 - 900 * 2, 'building_3');
+            grounds.create(0 + nextClusterOffset, -100 - 2500 - 100 - 900 * 2 - 700 + (31 / 2), 'building_3');
         }
 
-        function sharedUpdate() {
+        function update() {
+
+            /*AAAAAAA IT'S 10 MINUTES BEFORE THE DUE DATE LMAOOOOO*/
+
+            if (endingTimer > -1) {
+                if (endingTimer == 100) {
+                    cam.setZoom(2);
+                    cam.stopFollow();
+                    var posX = 0 + cam.displayWidth;
+                    var posY = 0 + cam.displayHeight;
+                    cam.scrollX = 0;
+                    cam.scrollY = 0;
+                    grounds.create(posX, posY, 'end_background');
+                    text = gameScene.add.text(posX, posY - 20, 'The End', { fontFamily: 'Georgia, serif', fontSize: 24, color:'#222222'}).setOrigin(0.5, 0.5);
+                    text = gameScene.add.text(posX, posY + 20, 'Fly High', { fontFamily: 'Georgia, serif', fontSize: 12, color:'#222222'}).setOrigin(0.5, 0.5);
+                    cam.fadeIn(2000, 255, 255, 255);
+                    console.log("ending");
+                }
+                // if (endingTimer < 150 && endingTimer % 5 == 0) {
+                if (endingTimer < 100) {
+                    spawnFinalClouds(endingTimer / 5);
+                }
+                endingTimer--;
+            }
 
             if (levelSpawnTimer > -1) {
                 if (levelSpawnTimer == 50) {
@@ -500,13 +575,28 @@
                     } else {
                         spawnCloud((levelSpawnTimer + levelSpawnDuration) / 10 + 1);
                     }
-
                 }
                 levelSpawnTimer--;
             }
 
-            if (player.x < 11000) background.x = cam.scrollX + 800;
-            background.y = cam.scrollY + 600;
+            // Freeze the background past a certain X
+            if (player.x < -450 && player.y < (-5566 + 250)) {
+                background.x = cam.scrollX + 800;
+                if (player.y < -6100) {
+                    if (!ending) triggerEnding();
+                }
+            } else {
+                background.x = cam.scrollX + 800;
+                background.y = cam.scrollY + 600;
+            }
+
+            // -5566
+
+            // console.log(player.x);
+            // if (player.x < 11000) background.x = cam.scrollX + 800;
+            // if (player.y < 11000) background.y = cam.scrollY + 600;
+            // background.x = cam.scrollX + 800;
+            // background.y = cam.scrollY + 600;
 
             cloudSpawnTimer--;
             if (cloudSpawnTimer <= 0) {
@@ -514,15 +604,13 @@
             }
 
             // Gravity function might have to be tweaked a bit
-            if (wingTimer % 75 == 0) {
-                wingDirection *= -1;
-                wingPhysics(20 * wingDirection);
-                // keyPhysics(speed * wingDirection);
-            }
-            wingTimer++;
+            // if (wingTimer % 75 == 0) {
+            //     wingDirection *= -1;
+            //     wingPhysics(20 * wingDirection);
+            // }
+            // wingTimer++;
 
             if (deathTimer > -1) {
-                // console.log(deathTimer);
                 if (deathTimer == 30) {
                     player.setPosition(playerCheckpoint.x, playerCheckpoint.y);
                     player.body.setVelocity(0, 0);
@@ -547,7 +635,6 @@
                     jumpCount = 0;
                     player.setDrag(1000, 0);
                     player.setGravityY(0);
-                    // movePlayer(400);
                     movePlayer(75);
                     airMovementSpeed = 50;
                 } else {
@@ -574,7 +661,6 @@
                     } else {
                         camZoom -= 0.0005;
                     }
-                    // console.log(camZoom);
                     cam.setZoom(camZoom)
                     if (player.body.velocity.x == 0) {
                         player.anims.play('idle', true);
@@ -599,10 +685,9 @@
                         cam.setZoom(0.5);
                     }
                     player.setDrag(0, 0);
-                    if (jumpCount > 1) {
+                    if (maxJumps > 1) {
                         if (cursors.down.isDown) {
                             player.body.velocity.y += 20;
-                            console.log("pressing down");
                             maxFallSpeed = 800;
                         } else {
                             maxFallSpeed = 100;
@@ -653,8 +738,10 @@
                 }
             }
 
-            console.log(player.y);
-            // cam.setZoom(0.7);
+            // console.log(maxFallSpeed);
+
+            // console.log(player.y);
+            // cam.setZoom(0.1);
         }
 
         function movePlayer(speed) {
@@ -705,11 +792,10 @@
         function jump() {
             if (maxJumps > 1) {
                 if (!player.body.touching.down && jumpCount == 0) {
-                    // If their first jump is not on the ground
-                    player.setVelocityY(player.body.velocity.y / 4 - 700);
+                    player.setVelocityY(player.body.velocity.y / 4 - jumpPower);
                     jumpCount++;
                 } else if (!player.body.touching.down) {
-                    player.setVelocityY(player.body.velocity.y / 4 - 700);
+                    player.setVelocityY(player.body.velocity.y / 4 - jumpPower);
                 } else {
                     player.setVelocityY(-500);
                 }
@@ -718,7 +804,6 @@
                 player.setVelocityY(-500);
                 jumpCount++;
             }
-            console.log(player.x + ", " + player.y);
         }
 
         function collectWing(player, wing) {
@@ -744,7 +829,6 @@
         }
 
         function spawnCloud(speedModifier) {
-            // Make the Y pos relative to the world instead? I guess? Maybe?
             var cloud = clouds.create(player.x + 1500, Phaser.Math.Between(player.y - 200, player.y + 500), 'cloud_' + Phaser.Math.Between(1, 8));
             cloud.body.setGravityY(-1500);
             cloud.body.setDrag(0, 0);
@@ -761,12 +845,27 @@
             });
         }
 
+        function spawnFinalClouds(speedModifier) {
+            var cloud = clouds.create(1500, Phaser.Math.Between(-500, 500), 'cloud_' + Phaser.Math.Between(1, 8));
+            cloud.body.setGravityY(-1500);
+            cloud.body.setDrag(0, 0);
+            cloud.body.setVelocityX(Phaser.Math.Between(-100 * speedModifier, -50 * speedModifier));
+
+            cloudSpawnTimer = Phaser.Math.Between(250, 700);
+
+            clouds.children.iterate(function (child) {
+                if (child.x < -100) {
+                    child.disableBody;
+                    child.y = -5000;
+                    child.y = -5000;
+                }
+            });
+        }
+
         function spawnCloudBelow(speedModifier) {
-            // Make the Y pos relative to the world instead? I guess? Maybe?
             var cloud = clouds.create(Phaser.Math.Between(player.x - 800, player.x + 800), player.y + 600, 'cloud_' + Phaser.Math.Between(1, 8));
             cloud.body.setGravityY(-1500);
             cloud.body.setDrag(0, 0);
-            cloud.body.setVelocityY(Phaser.Math.Between(-100 * speedModifier, -50 * speedModifier));
             cloud.body.setVelocityX(Phaser.Math.Between(-100 * speedModifier, -50 * speedModifier));
 
             cloudSpawnTimer = Phaser.Math.Between(250, 600);
@@ -781,6 +880,17 @@
             keys.children.iterate(function (child) {
                 child.setGravityY(-1500);
             });
+        }
+
+        function triggerEnding() {
+            ending = true;
+            player.setGravityY(-1501);
+            // cam.stopFollow();
+            cam.fadeOut(3000, 255, 255, 255);
+
+            keyCollected = true;
+            endingTimer = 400;
+            console.log("ending triggered");
         }
 
     </script>
