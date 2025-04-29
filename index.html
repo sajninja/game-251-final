@@ -346,8 +346,8 @@
 
             wingPhysics();
 
-            text = gameScene.add.text(xOffset - 300, yOffset - 200, 'Hold the left or right arrow to run', { fontFamily: 'Georgia, serif', fontSize: 18});
-            text = gameScene.add.text(xOffset + 100, yOffset - 200, 'Collect the key to unlock the next level', { fontFamily: 'Georgia, serif', fontSize: 18});
+            text = gameScene.add.text(xOffset - 300, yOffset - 200, 'Hold the left or right arrow to run', { fontFamily: 'Georgia, serif', fontSize: 18 });
+            text = gameScene.add.text(xOffset + 100, yOffset - 200, 'Collect the key to unlock the next level', { fontFamily: 'Georgia, serif', fontSize: 18 });
         }
 
         function createLevel2(xOffset, yOffset) {
@@ -363,8 +363,8 @@
 
             wingPhysics();
 
-            text = gameScene.add.text(xOffset - 370, yOffset - 150, 'Press the up arrow to jump', { fontFamily: 'Georgia, serif', fontSize: 18});
-            text = gameScene.add.text(xOffset - 400, yOffset - 125, 'You must build up speed to jump far', { fontFamily: 'Georgia, serif', fontSize: 18});
+            text = gameScene.add.text(xOffset - 370, yOffset - 150, 'Press the up arrow to jump', { fontFamily: 'Georgia, serif', fontSize: 18 });
+            text = gameScene.add.text(xOffset - 400, yOffset - 125, 'You must build up speed to jump far', { fontFamily: 'Georgia, serif', fontSize: 18 });
         }
 
         function createLevel3(xOffset, yOffset) {
@@ -377,7 +377,7 @@
 
             wingPhysics();
 
-            text = gameScene.add.text(xOffset - 150, yOffset - 200, 'Collect wings to gain extra jumps', { fontFamily: 'Georgia, serif', fontSize: 18});
+            text = gameScene.add.text(xOffset - 150, yOffset - 200, 'Collect wings to gain extra jumps', { fontFamily: 'Georgia, serif', fontSize: 18 });
         }
 
         function createLevel4(xOffset, yOffset) {
@@ -409,8 +409,8 @@
 
             wingPhysics();
 
-            text = gameScene.add.text(xOffset, yOffset - 200, 'Wings allow you to glide slowly', { fontFamily: 'Georgia, serif', fontSize: 18});
-            text = gameScene.add.text(xOffset, yOffset - 175, 'Hold the down arrow to fall faster', { fontFamily: 'Georgia, serif', fontSize: 18});
+            text = gameScene.add.text(xOffset, yOffset - 200, 'Wings allow you to glide slowly', { fontFamily: 'Georgia, serif', fontSize: 18 });
+            text = gameScene.add.text(xOffset, yOffset - 175, 'Hold the down arrow to fall faster', { fontFamily: 'Georgia, serif', fontSize: 18 });
         }
 
         function createLevel6(xOffset, yOffset) {
@@ -447,7 +447,7 @@
 
             wingPhysics();
 
-            text = gameScene.add.text(xOffset - 160, yOffset - 400, 'Collecting wings expands your worldview', { fontFamily: 'Georgia, serif', fontSize: 18});
+            text = gameScene.add.text(xOffset - 160, yOffset - 400, 'Collecting wings expands your worldview', { fontFamily: 'Georgia, serif', fontSize: 18 });
         }
 
         function createLevel7(xOffset, yOffset) {
@@ -488,7 +488,7 @@
         }
 
         function createLevel8(xOffset, yOffset) {
-            
+
             sign = decorations.create(xOffset + 1850, yOffset - 1560 + 10, 'sign_2');
             sign.angle = 9;
             sign = decorations.create(xOffset + 1700, yOffset - 1550 + 10, 'sign_2');
@@ -548,8 +548,8 @@
                     cam.scrollX = 0;
                     cam.scrollY = 0;
                     grounds.create(posX, posY, 'end_background');
-                    text = gameScene.add.text(posX, posY - 20, 'The End', { fontFamily: 'Georgia, serif', fontSize: 24, color:'#222222'}).setOrigin(0.5, 0.5);
-                    text = gameScene.add.text(posX, posY + 20, 'Fly High', { fontFamily: 'Georgia, serif', fontSize: 12, color:'#222222'}).setOrigin(0.5, 0.5);
+                    text = gameScene.add.text(posX, posY - 20, 'The End', { fontFamily: 'Georgia, serif', fontSize: 24, color: '#222222' }).setOrigin(0.5, 0.5);
+                    text = gameScene.add.text(posX, posY + 20, 'Fly High', { fontFamily: 'Georgia, serif', fontSize: 12, color: '#222222' }).setOrigin(0.5, 0.5);
                     cam.fadeIn(2000, 255, 255, 255);
                     console.log("ending");
                 }
@@ -638,7 +638,11 @@
                     player.setDrag(1000, 0);
                     player.setGravityY(0);
                     movePlayer(75);
-                    airMovementSpeed = 50;
+                    if (maxJumps > 1) {
+                        airMovementSpeed = 50;
+                    } else {
+                        airMovementSpeed = 5;
+                    }
                 } else {
                     movePlayer(airMovementSpeed);
                     if (player.body.velocity.y > maxFallSpeed && maxJumps > 1 && !cursors.down.isDown) player.body.velocity.y -= player.body.velocity.y / 20;
@@ -889,16 +893,11 @@
             player.setGravityY(-1501);
             // cam.stopFollow();
             cam.fadeOut(3000, 255, 255, 255);
-
             keyCollected = true;
             endingTimer = 400;
             console.log("ending triggered");
         }
-
     </script>
-
-
 </body>
 
 </html>
-
