@@ -241,11 +241,11 @@
 
             clouds = this.physics.add.group();
 
-            level = 4;
+            level = 1;
             createLevel(level);
             player.x = playerCheckpoint.x;
             player.y = playerCheckpoint.y;
-            maxJumps = 2;
+            maxJumps = 1;
 
             camZoom = 1.5 - (maxJumps - 1) / 5;;
             cam.setZoom(camZoom);
