@@ -668,10 +668,10 @@
 
                 if (cursors.up.isDown && firstJump) {
                     // limit jumps
-                    // if (jumpCount < maxJumps) {
+                    if (jumpCount < maxJumps) {
                         player.setGravityY(0);
                         jump();
-                    // }
+                    }
                     firstJump = false;
                 } else if (!cursors.up.isDown) {
                     firstJump = true;
