@@ -241,11 +241,11 @@
 
             clouds = this.physics.add.group();
 
-            level = 1;
+            level = 4;
             createLevel(level);
             player.x = playerCheckpoint.x;
             player.y = playerCheckpoint.y;
-            maxJumps = 1;
+            maxJumps = 2;
 
             camZoom = 1.5 - (maxJumps - 1) / 5;;
             cam.setZoom(camZoom);
@@ -409,8 +409,8 @@
 
             wingPhysics();
 
-            text = gameScene.add.text(xOffset, yOffset - 200, 'Wings allow you to glide slowly', { fontFamily: 'Georgia, serif', fontSize: 18 });
-            text = gameScene.add.text(xOffset, yOffset - 175, 'Hold the down arrow to fall faster', { fontFamily: 'Georgia, serif', fontSize: 18 });
+            text = gameScene.add.text(xOffset - 350, yOffset - 400, 'Wings allow you to glide slowly', { fontFamily: 'Georgia, serif', fontSize: 18 }).setOrigin(0.5, 0.5);
+            text = gameScene.add.text(xOffset - 350, yOffset - 400 + 30, 'Hold the down arrow to fall faster', { fontFamily: 'Georgia, serif', fontSize: 18 }).setOrigin(0.5, 0.5);
         }
 
         function createLevel6(xOffset, yOffset) {
@@ -582,7 +582,7 @@
             }
 
             // Freeze the background past a certain X
-            if (player.x < -450 && player.y < (-5566 + 250)) {
+            if (player.x < -450 && player.y < (-5566 + 320)) {
                 background.x = cam.scrollX + 800;
                 if (player.y < -6100) {
                     if (!ending) triggerEnding();
